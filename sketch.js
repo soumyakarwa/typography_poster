@@ -30,6 +30,7 @@ function draw() {
   }
 }
 
+// Helper function that initializes squareWidth, squareX, squareY and all rectanlge properties 
 function setupHelper(){
   squareWidth[7] = 36; 
   squareWidth[6] = 36;
@@ -39,18 +40,6 @@ function setupHelper(){
   marginX = (windowWidth - squareWidth[0] - squareWidth[1])/2; 
   marginY = (windowHeight-squareWidth[0])/2;
 
-  rectangles = [
-    {txt: "1.6180339887 ", width: squareWidth[6], height: squareWidth[6], charsDisplayed: 0, color: blueShades[6]},
-    {txt: "98948482045868343656 ",  width: squareWidth[5], height: squareWidth[5], charsDisplayed: 0, color: blueShades[5]},
-    {txt: "3811772030917980576286213544 ",  width: squareWidth[4], height: squareWidth[4], charsDisplayed: 0, color: blueShades[4]},
-    {txt: "86227052604628189024497072072041893911374847540 ",  width: squareWidth[3], height: squareWidth[3], charsDisplayed: 0, color: blueShades[3]},
-    {txt: "880753868917521266338622235369317931800607667263544333890865959395829056383 ",  width: squareWidth[2], height: squareWidth[2], charsDisplayed: 0, color: blueShades[2]},
-    {txt: "2661319928290267880675208766892501711696207032221043216269548626296313614438149758701220340805887954454749246185695364864 ",  width: squareWidth[1], height: squareWidth[1], charsDisplayed: 0, color: blueShades[1]},
-  ];
-}
-
-function drawSquares(){
-  noStroke(); 
   squareX[0] = windowWidth-squareWidth[0]-marginX; 
   squareY[0] = marginY; 
   
@@ -74,13 +63,27 @@ function drawSquares(){
   
   squareX[7] = squareX[6] + squareWidth[6]; 
   squareY[7] = squareY[6]; 
-  
+
+  rectangles = [
+    {txt: "1.6180339887 ", width: squareWidth[6], height: squareWidth[6], charsDisplayed: 0, color: blueShades[6]},
+    {txt: "98948482045868343656 ",  width: squareWidth[5], height: squareWidth[5], charsDisplayed: 0, color: blueShades[5]},
+    {txt: "3811772030917980576286213544 ",  width: squareWidth[4], height: squareWidth[4], charsDisplayed: 0, color: blueShades[4]},
+    {txt: "86227052604628189024497072072041893911374847540 ",  width: squareWidth[3], height: squareWidth[3], charsDisplayed: 0, color: blueShades[3]},
+    {txt: "880753868917521266338622235369317931800607667263544333890865959395829056383 ",  width: squareWidth[2], height: squareWidth[2], charsDisplayed: 0, color: blueShades[2]},
+    {txt: "2661319928290267880675208766892501711696207032221043216269548626296313614438149758701220340805887954454749246185695364864 ",  width: squareWidth[1], height: squareWidth[1], charsDisplayed: 0, color: blueShades[1]},
+  ];
+}
+
+// Helper function to draw fibonacci squares
+function drawSquares(){
+  noStroke(); 
   for(let i = 0; i <squareX.length; i++){
     fill(blueShades[i]); 
     rect(squareX[i], squareY[i], squareWidth[i]); 
   }
 }
 
+// Helper function to create nested paths
 function drawNestedText(centerX, centerY, rectNumber) {
   let xOffset = centerX - rectangles[0].width / 2;
   let yOffset = centerY - rectangles[0].height / 2;
@@ -101,6 +104,7 @@ function drawNestedText(centerX, centerY, rectNumber) {
   }
 }
 
+// Helper function that writes the text on the pathway
 function displayText(index, charSpacing, rWidth, rHeight, textStr, color) {
   let dist = (index * charSpacing + millis() * speed) % (2 * (rWidth + rHeight)); 
   let x, y, angle = 0;
