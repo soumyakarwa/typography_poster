@@ -6,39 +6,31 @@ let squareY = [];
 let blueShades = ["#201E5A", "#233B75", "#0077B6", "#0396C7", "#02B4D7", "#4EC6E0", "#97D8E8", "#B0E1EE"]; 
 let marginX; 
 let marginY; 
-let phi; 
-let b; 
-let xLoc; 
-let yLoc; 
-let radius; 
-let theta = 0; 
+let rectangles; 
+let fontSize = 30;
+let ibm; 
+let speed = 0.02; 
+
+function preload(){
+  ibm =loadFont("ibmPlexMono.ttf");
+}
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  setSquareWidth(); 
-  phi = (1+ sqrt(5))/2; 
-  b = (log(phi))/(PI/2); 
-  radius = squareWidth[7];
+  setupHelper();
+  frameRate(15);  
 }
 
 function draw() {
   background(255); 
   drawSquares();
-  spiralGraph(); 
-  theta += PI/180; 
-  radius += 0.5; 
+  for(let i = 0; i < numberOfSquares-1; i++){
+    resetMatrix(); 
+    drawNestedText(squareX[i]+squareWidth[i]/2, squareY[i]+squareWidth[i]/2, rectangles.length-i); 
+  }
 }
 
-function spiralGraph(){
-  let e = Math.exp(b * theta);
-  xLoc = radius * e * cos(-theta); 
-  yLoc = radius * e * sin(-theta); 
-  fill(0); 
-  // The position starts from the center of square7
-  ellipse(xLoc + squareX[7] + squareWidth[7]/2, yLoc + squareY[7] + squareWidth[7]/2, 10); 
-}
-
-function setSquareWidth(){
+function setupHelper(){
   squareWidth[7] = 36; 
   squareWidth[6] = 36;
   for(let i = 5; i > -1; i--){
@@ -46,6 +38,15 @@ function setSquareWidth(){
   }
   marginX = (windowWidth - squareWidth[0] - squareWidth[1])/2; 
   marginY = (windowHeight-squareWidth[0])/2;
+
+  rectangles = [
+    {txt: "1.6180339887 ", width: squareWidth[6], height: squareWidth[6], charsDisplayed: 0, color: blueShades[6]},
+    {txt: "98948482045868343656 ",  width: squareWidth[5], height: squareWidth[5], charsDisplayed: 0, color: blueShades[5]},
+    {txt: "3811772030917980576286213544 ",  width: squareWidth[4], height: squareWidth[4], charsDisplayed: 0, color: blueShades[4]},
+    {txt: "86227052604628189024497072072041893911374847540 ",  width: squareWidth[3], height: squareWidth[3], charsDisplayed: 0, color: blueShades[3]},
+    {txt: "880753868917521266338622235369317931800607667263544333890865959395829056383 ",  width: squareWidth[2], height: squareWidth[2], charsDisplayed: 0, color: blueShades[2]},
+    {txt: "2661319928290267880675208766892501711696207032221043216269548626296313614438149758701220340805887954454749246185695364864 ",  width: squareWidth[1], height: squareWidth[1], charsDisplayed: 0, color: blueShades[1]},
+  ];
 }
 
 function drawSquares(){
@@ -79,3 +80,57 @@ function drawSquares(){
     rect(squareX[i], squareY[i], squareWidth[i]); 
   }
 }
+
+function drawNestedText(centerX, centerY, rectNumber) {
+  let xOffset = centerX - rectangles[0].width / 2;
+  let yOffset = centerY - rectangles[0].height / 2;
+
+  for (let k = 0; k < rectNumber; k++) {
+      translate(xOffset, yOffset);
+      let totalPerimeter = (rectangles[k].width + rectangles[k].height) * 2;
+      let charSpacing = totalPerimeter / rectangles[k].txt.length;
+
+      for (let i = 0; i < rectangles[k].txt.length; i++) {
+          displayText(i, charSpacing, rectangles[k].width, rectangles[k].height, rectangles[k].txt, rectangles[k].color);
+      }
+
+      if (k < rectNumber - 1) {
+        xOffset = (rectangles[k].width - rectangles[k + 1].width) / 2;
+        yOffset = (rectangles[k].height - rectangles[k + 1].height) / 2;
+    }
+  }
+}
+
+function displayText(index, charSpacing, rWidth, rHeight, textStr, color) {
+  let dist = (index * charSpacing + millis() * speed) % (2 * (rWidth + rHeight)); 
+  let x, y, angle = 0;
+
+  if (dist < rWidth) {
+      x = dist;
+      y = 0;
+  } else if (dist < rWidth + rHeight) {
+      x = rWidth;
+      y = dist - rWidth;
+      angle = HALF_PI;
+  } else if (dist < rWidth * 2 + rHeight) {
+      x = rWidth - (dist - (rWidth + rHeight));
+      y = rHeight;
+      angle = PI;
+  } else {
+      x = 0;
+      y = rHeight - (dist - (rWidth * 2 + rHeight));
+      angle = -HALF_PI;
+  }
+
+  push();
+  translate(x, y);
+  rotate(angle);
+  fill(color);
+  textSize(fontSize);
+  textFont(ibm);  
+  text(textStr.charAt(index), 0, 0);
+  pop();
+}
+
+
+
