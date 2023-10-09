@@ -57,12 +57,8 @@ function drawNestedText(index, centerX, centerY, rectNumber) {
           yOffset = (textRect[k].height - textRect[k + 1].height) / 2;
       }
     }
-
-    
-
   }
   else {
-    // ellipse(centerX, centerY, 20); 
     push(); 
     textAlign(CENTER, CENTER);
     fill(squares[numberOfSquares-index-1].color);
